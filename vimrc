@@ -10,14 +10,11 @@ Bundle 'gmarik/vundle'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Gundo'
 Bundle 'tomtom/tcomment_vim'
-Bundle 'Command-T'
 Bundle 'scrooloose/nerdtree'
 Bundle 'spf13/vim-autoclose'
 Bundle 'mileszs/ack.vim'
 Bundle 'bufkill.vim'
-Bundle 'fholgado/minibufexpl.vim'
 Bundle 'tpope/vim-fugitive'
-" Bundle 'ervandew/supertab'
 Bundle 'taglist.vim'
 Bundle 'Tagbar'
 Bundle 'AutoTag'
@@ -28,11 +25,12 @@ Bundle 'python_match.vim'
 Bundle 'Indent-Guides'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'surround.vim'
-" Bundle 'hallettj/jslint.vim'
 Bundle 'walm/jshint.vim'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
-
+Bundle 'ctrlp.vim'
+Bundle 'bling/vim-airline'
+Bundle 'scrooloose/syntastic'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -71,19 +69,6 @@ if &t_Co > 2 || has("gui_running")
   set guioptions=egmt
   highlight SpellBad term=underline gui=undercurl guisp=Orange
   set guifont=Monaco:h13
-  map <C-p> :CommandT<CR>
-endif
-
-if has('statusline')
-    set laststatus=2
-
-    " Broken down into easily includeable segments
-    set statusline=%<%f\                     " Filename
-    set statusline+=%w%h%m%r                 " Options
-    set statusline+=%{fugitive#statusline()} " Git Hotness
-    set statusline+=\ [%Y]            " Filetype
-    " set statusline+=\ [%{getcwd()}]          " Current dir
-    set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
 endif
 
 " Put these in an autocmd group, so that we can delete them easily.
@@ -119,6 +104,9 @@ let mapleader = ","
 
 let python_version_2 = 1
 
+" Autoinsert ipdb
+nmap <leader>i oimport ipdb; ipdb.set_trace()<esc>
+
 " autoclose
 nmap <Leader>x <Plug>ToggleAutoCloseMappings
 
@@ -150,10 +138,10 @@ let Tlist_Compact_Format = 1
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
 let Tlist_File_Fold_Auto_Close = 1
-let Tlist_Ctags_Cmd = "/opt/local/bin/ctags" 
+let Tlist_Ctags_Cmd = "/usr/local/bin/ctags" 
 
 " tagging
-let g:autotagCtagsCmd ="/opt/local/bin/ctags --python-kinds=-i"
+let g:autotagCtagsCmd ="/usr/local/bin/ctags --python-kinds=-i"
 nmap <leader>tp <c-W>}
 nmap <leader>tg <c-]>
 nmap <leader>tl g]
@@ -177,17 +165,14 @@ inoremap <nul> <c-x><c-i>
 inoremap <C-Space> <c-x><c-i>
 inoremap <S-Tab> <c-x><c-i>
 
-" pyflakes
-nnoremap <F16> :call Pyflakes()<CR>
 
 " preview windows
-nnoremap <F17> :ccl<CR>
-nnoremap <F18> :pc<CR>
+nnoremap <F16> :ccl<CR>:pc<CR>
 
 " minibuf toggle
-nnoremap <F14> :TMiniBufExplorer<CR>
-nmap <leader><Left> :bprev<CR>
-nmap <leader><Right> :bnext<CR>
+nnoremap <F14> :buffers<CR>
+nmap <F17> :bprev<CR>
+nmap <F18> :bnext<CR>
 
 " window navigation
 nnoremap <silent> <S-left> :wincmd h<CR>
@@ -195,22 +180,15 @@ nnoremap <silent> <S-right> :wincmd l<CR>
 nnoremap <silent> <S-down> :wincmd j<CR>
 nnoremap <silent> <S-up> :wincmd k<CR>
 
-" conque
-nmap <leader>t :ConqueTermVSplit ssh jwl@jwldev.isynet.net<CR>
-
-" restart apache
-nmap <leader>r :!ssh jwl@jwldev.isynet.net "sudo /etc/init.d/apache2 restart"<CR>
 
 " gundo
 nnoremap <leader>u :GundoToggle<CR>
 
 " ack
-let g:ackprg="/opt/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore tags"
+let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore tags"
 nmap <leader>a <Esc>:Ack!
 
 nnoremap <F19> :nohlsearch<CR>
-
-nmap <leader>j :JSHint<CR>
 
 nmap <silent> <leader>d <Plug>DashSearch
 
@@ -219,7 +197,6 @@ nnoremap - ddp
 nnoremap _ ddP
 inoremap jk <esc> 
 
-" indent guides
 " For some colorschemes, autocolor will not work (eg: 'desert', 'ir_black')
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#404040 ctermbg=4
@@ -227,3 +204,16 @@ let g:indent_guides_exclude_filetypes = ['nerdtree']
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_vim_startup = 1
+
+" YCM
+let g:ycm_path_to_python_interpreter = '/usr/bin/python'
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" Airline
+set laststatus=2
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline_section_y = airline#section#create(['%m'])
+let g:airline#extensions#tagbar#flags = 'f'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_buffers = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
