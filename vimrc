@@ -1,4 +1,5 @@
 set nocompatible
+:set dir=~/src/.swp
 
 " Bundle
 filetype off                   " required!
@@ -31,6 +32,8 @@ Bundle 'rizzatti/dash.vim'
 Bundle 'ctrlp.vim'
 Bundle 'bling/vim-airline'
 Bundle 'scrooloose/syntastic'
+Bundle 'tpope/vim-surround'
+Bundle 'oplatek/Conque-Shell'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -59,6 +62,7 @@ set title
 set hidden
 set number
 set hlsearch
+set vb
 
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -92,11 +96,10 @@ au BufRead,BufNewFile * set listchars=tab:>-"
 
 
 " filetype completion
-autocmd FileType html set ft=htmldjango
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-autocmd FileType htmldjango set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType less set ft=css
 
 augroup END
 
@@ -154,9 +157,8 @@ let NERDTreeIgnore = ['\.pyc$']
 
 nnoremap <silent> <F13> :NERDTreeToggle<CR>
 
-" command t
-let g:CommandTMaxHeight = 10
-set wildignore+=.git,*.pyc,*/venv/*
+" ctrl p
+set wildignore+=.git,*.pyc,*/venv/*,*/xmls/*
 
 " supertab
 let g:SuperTabDefaultCompletionType = "context"
@@ -185,12 +187,15 @@ nnoremap <silent> <S-up> :wincmd k<CR>
 nnoremap <leader>u :GundoToggle<CR>
 
 " ack
-let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore tags"
+let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags"
 nmap <leader>a <Esc>:Ack!
 
 nnoremap <F19> :nohlsearch<CR>
 
 nmap <silent> <leader>d <Plug>DashSearch
+
+" Conque
+nmap <leader>t :ConqueTerm bash<CR>
 
 " Stuff from learn vimscript
 nnoremap - ddp
@@ -209,6 +214,9 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
+" Syntatistic
+let g:syntastic_python_checkers=['pyflakes']
+
 " Airline
 set laststatus=2
 let g:airline#extensions#whitespace#enabled = 0
@@ -217,3 +225,7 @@ let g:airline#extensions#tagbar#flags = 'f'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+
+" Avoid setting caps with u
+vmap u <nop>
+vmap U <nop>
