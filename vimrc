@@ -153,12 +153,13 @@ nmap <leader>tl g]
 let NERDTreeShowLineNumbers=1
 let NERDTreeChDirMode = 2 " useful with command-t (sets CWD)
 let NERDTreeShowBookmarks = 1
-let NERDTreeIgnore = ['\.pyc$']
+let NERDTreeIgnore = ['\.pyc$', 'xmls']
 
 nnoremap <silent> <F13> :NERDTreeToggle<CR>
 
 " ctrl p
-set wildignore+=.git,*.pyc,*/venv/*,*/xmls/*
+set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*,*/tests/resources/*
+let g:ctrlp_custom_ignore = 'xmls'
 
 " supertab
 let g:SuperTabDefaultCompletionType = "context"
