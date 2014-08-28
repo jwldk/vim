@@ -34,6 +34,9 @@ Bundle 'bling/vim-airline'
 Bundle 'scrooloose/syntastic'
 Bundle 'tpope/vim-surround'
 Bundle 'oplatek/Conque-Shell'
+Bundle 'wikitopian/hardmode'
+Bundle 'kana/vim-textobj-user'
+Bundle 'bps/vim-textobj-python'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -198,10 +201,8 @@ nmap <silent> <leader>d <Plug>DashSearch
 " Conque
 nmap <leader>t :ConqueTerm bash<CR>
 
-" Stuff from learn vimscript
-nnoremap - ddp
-nnoremap _ ddP
 inoremap jk <esc> 
+nmap - "
 
 " For some colorschemes, autocolor will not work (eg: 'desert', 'ir_black')
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
@@ -230,3 +231,12 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 " Avoid setting caps with u
 vmap u <nop>
 vmap U <nop>
+
+" Hardmode
+nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
+
+" python textblock
+nmap <leader>nf ]pf
+nmap <leader>pf [pf
+nmap <leader>nc ]pc
+nmap <leader>pc [pc
