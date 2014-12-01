@@ -64,7 +64,7 @@ set smarttab
 set title
 set hidden
 set number
-set hlsearch
+set nohlsearch
 set vb
 
 
@@ -194,7 +194,7 @@ nnoremap <leader>u :GundoToggle<CR>
 let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags"
 nmap <leader>a <Esc>:Ack!
 
-nnoremap <F19> :nohlsearch<CR>
+noremap <F19> :set hlsearch! hlsearch?<CR>
 
 nmap <silent> <leader>d <Plug>DashSearch
 
@@ -228,15 +228,39 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 
+" Middle of screen with space
+nmap <space> zz
+
 " Avoid setting caps with u
 vmap u <nop>
 vmap U <nop>
 
 " Hardmode
-nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
+nnoremap <leader>H <Esc>:call ToggleHardMode()<CR>
 
 " python textblock
 nmap <leader>nf ]pf
 nmap <leader>pf [pf
 nmap <leader>nc ]pc
 nmap <leader>pc [pc
+
+" Prefering single tick
+nmap ' `
+
+" EasyMotion config
+let g:EasyMotion_do_mapping = 0 " Disable default mappings"
+nmap s <Plug>(easymotion-s2)
+let g:EasyMotion_smartcase = 1
+
+" HJKL motions: Line motions
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
+" search motions
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+
+map  n <Plug>(easymotion-next)
+map  N <Plug>(easymotion-prev)
