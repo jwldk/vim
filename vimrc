@@ -66,16 +66,21 @@ set hidden
 set number
 set nohlsearch
 set vb
+set cursorline
 
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also some MacVim GUI settings
 if &t_Co > 2 || has("gui_running")
-  syntax on
-  colorscheme darkdesert
-  set guioptions=egmt
-  highlight SpellBad term=underline gui=undercurl guisp=Orange
-  set guifont=Monaco:h13
+    let g:solarized_contrast="high"
+    let g:solarized_termcolors=256
+    syntax enable
+    set background=dark
+    colorscheme solarized
+    " colorscheme darkdesert
+    set guioptions=egmt
+    highlight SpellBad term=underline gui=undercurl guisp=Orange
+    set guifont=Monaco:h13
 endif
 
 " Put these in an autocmd group, so that we can delete them easily.
@@ -125,11 +130,11 @@ vmap <Leader>cj :TCommentAs javascript<CR>
 " quickly close all
 nnoremap Q :qall<CR>
 
-" Toggle line numbers and fold column
-nnoremap <F5> :set nonumber!<CR>:set foldcolumn=0<CR>
-
-" Toggle linewrap
-nnoremap <F6> :set wrap!<CR>
+" Copy to clipboard
+" nnoremap <F5> "+y
+"
+" " Paste from clipboard
+" nnoremap <F6> "+p
 
 " Taglist variables
 let g:ctags_statusline=1
@@ -206,6 +211,7 @@ nmap - "
 
 " For some colorschemes, autocolor will not work (eg: 'desert', 'ir_black')
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
+
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#404040 ctermbg=4
 let g:indent_guides_exclude_filetypes = ['nerdtree']
 let g:indent_guides_start_level = 2
@@ -245,7 +251,7 @@ nmap <leader>nc ]pc
 nmap <leader>pc [pc
 
 " Prefering single tick
-nmap ' `
+" nmap ' `
 
 " EasyMotion config
 let g:EasyMotion_do_mapping = 0 " Disable default mappings"
