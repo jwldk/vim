@@ -37,6 +37,8 @@ Bundle 'oplatek/Conque-Shell'
 Bundle 'wikitopian/hardmode'
 Bundle 'kana/vim-textobj-user'
 Bundle 'bps/vim-textobj-python'
+Bundle 'tpope/vim-repeat'
+Bundle 'svermeulen/vim-easyclip'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -115,6 +117,12 @@ let mapleader = ","
 
 let python_version_2 = 1
 
+" Ctrl-S to save
+noremap <silent> <C-S>          :update<CR>
+vnoremap <silent> <C-S>         <C-C>:update<CR>
+inoremap <silent> <C-S>         <C-O>:update<CR>
+noremap <silent> <leader>s :update<CR> 
+
 " Autoinsert ipdb
 nmap <leader>i oimport ipdb; ipdb.set_trace()<esc>
 
@@ -166,8 +174,9 @@ let NERDTreeIgnore = ['\.pyc$', 'xmls']
 nnoremap <silent> <F13> :NERDTreeToggle<CR>
 
 " ctrl p
-set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*,*/tests/resources/*
+set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*
 let g:ctrlp_custom_ignore = 'xmls'
+let g:ctrlp_cmd = 'CtrlP getcwd()'
 
 " supertab
 let g:SuperTabDefaultCompletionType = "context"
@@ -191,7 +200,11 @@ nnoremap <silent> <S-right> :wincmd l<CR>
 nnoremap <silent> <S-down> :wincmd j<CR>
 nnoremap <silent> <S-up> :wincmd k<CR>
 
+" Change directory
+nnoremap <leader>b :cd ~/src/chef/Backend<CR>
+nnoremap <leader>f :cd ~/src/chef/Frontend<CR>
 
+nnoremap <leader>v :vsplit<CR>
 " gundo
 nnoremap <leader>u :GundoToggle<CR>
 
@@ -202,6 +215,7 @@ nmap <leader>a <Esc>:Ack!
 noremap <F19> :set hlsearch! hlsearch?<CR>
 
 nmap <silent> <leader>d <Plug>DashSearch
+nnoremap <leader>m m
 
 " Conque
 nmap <leader>t :ConqueTerm bash<CR>
@@ -219,6 +233,7 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_vim_startup = 1
 
 " YCM
+let g:ycm_filetype_blacklist = { 'xml': 1 }
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
