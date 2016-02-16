@@ -4,7 +4,7 @@ set nocompatible
 " Bundle
 filetype off                   " required!
 
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
@@ -31,6 +31,7 @@ Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 Bundle 'ctrlp.vim'
 Bundle 'bling/vim-airline'
+Bundle 'vim-airline/vim-airline-themes'
 Bundle 'scrooloose/syntastic'
 Bundle 'tpope/vim-surround'
 Bundle 'oplatek/Conque-Shell'
@@ -39,6 +40,15 @@ Bundle 'kana/vim-textobj-user'
 Bundle 'bps/vim-textobj-python'
 Bundle 'tpope/vim-repeat'
 Bundle 'svermeulen/vim-easyclip'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'wellle/targets.vim'
+Bundle 'wakatime/vim-wakatime'
+Bundle 'chrisbra/improvedft'
+Bundle 'junegunn/vim-peekaboo'
+Bundle 'digitaltoad/vim-jade'
+Bundle 'jpalardy/spacehi.vim'
+Bundle 'tpope/vim-sleuth'
+Bundle 'maksimr/vim-jsbeautify'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -66,6 +76,7 @@ set smarttab
 set title
 set hidden
 set number
+set relativenumber
 set nohlsearch
 set vb
 set cursorline
@@ -82,7 +93,7 @@ if &t_Co > 2 || has("gui_running")
     " colorscheme darkdesert
     set guioptions=egmt
     highlight SpellBad term=underline gui=undercurl guisp=Orange
-    set guifont=Monaco:h13
+    set guifont=Monaco:h14
 endif
 
 " Put these in an autocmd group, so that we can delete them easily.
@@ -101,13 +112,17 @@ autocmd BufReadPost *
 \   exe "normal g`\"" |
 \ endif
 
-au BufRead,BufNewFile * set list " show tabs, so we can hunt them down and kill them
-au BufRead,BufNewFile * set listchars=tab:>-"
+au BufRead,BufNewFile *.py set list " show tabs, so we can hunt them down and kill them
+au BufRead,BufNewFile *.py set listchars=tab:>-"
+
+" Auto save on enter normal mode
+au InsertLeave <buffer> update
 
 
 " filetype completion
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType jade set noexpandtab
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType less set ft=css
 
@@ -117,11 +132,12 @@ let mapleader = ","
 
 let python_version_2 = 1
 
+nnoremap gp `[v`]
+
 " Ctrl-S to save
 noremap <silent> <C-S>          :update<CR>
 vnoremap <silent> <C-S>         <C-C>:update<CR>
 inoremap <silent> <C-S>         <C-O>:update<CR>
-noremap <silent> <leader>s :update<CR> 
 
 " Autoinsert ipdb
 nmap <leader>i oimport ipdb; ipdb.set_trace()<esc>
@@ -177,6 +193,7 @@ nnoremap <silent> <F13> :NERDTreeToggle<CR>
 set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*
 let g:ctrlp_custom_ignore = 'xmls'
 let g:ctrlp_cmd = 'CtrlP getcwd()'
+nmap <leader>p :CtrlPLine<CR>
 
 " supertab
 let g:SuperTabDefaultCompletionType = "context"
@@ -190,7 +207,7 @@ inoremap <S-Tab> <c-x><c-i>
 nnoremap <F16> :ccl<CR>:pc<CR>
 
 " minibuf toggle
-nnoremap <F14> :buffers<CR>
+nnoremap <F14> :CtrlPBuffer<CR>
 nmap <F17> :bprev<CR>
 nmap <F18> :bnext<CR>
 
@@ -203,18 +220,19 @@ nnoremap <silent> <S-up> :wincmd k<CR>
 " Change directory
 nnoremap <leader>b :cd ~/src/chef/Backend<CR>
 nnoremap <leader>f :cd ~/src/chef/Frontend<CR>
+nnoremap <leader>r :cd ~/src/rainmaking/thehub<CR>
 
 nnoremap <leader>v :vsplit<CR>
+nnoremap <leader>s :split<CR>
 " gundo
 nnoremap <leader>u :GundoToggle<CR>
 
 " ack
-let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags"
+let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags --ignore-dir=backend/docs --ignore-dir=web/assets --ignore-dir=src/"
 nmap <leader>a <Esc>:Ack!
 
 noremap <F19> :set hlsearch! hlsearch?<CR>
 
-nmap <silent> <leader>d <Plug>DashSearch
 nnoremap <leader>m m
 
 " Conque
@@ -222,6 +240,8 @@ nmap <leader>t :ConqueTerm bash<CR>
 
 inoremap jk <esc> 
 nmap - "
+vmap - "
+vmap Y "+y
 
 " For some colorschemes, autocolor will not work (eg: 'desert', 'ir_black')
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
@@ -235,7 +255,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 " YCM
 let g:ycm_filetype_blacklist = { 'xml': 1 }
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
-nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Syntatistic
 let g:syntastic_python_checkers=['pyflakes']
@@ -285,3 +305,6 @@ omap / <Plug>(easymotion-tn)
 
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
+
+" ft improved
+let g:ft_improved_ignorecase = 1
