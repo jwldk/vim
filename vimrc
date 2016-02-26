@@ -7,7 +7,7 @@ filetype off                   " required!
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/Vundle.vim'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Gundo'
 Bundle 'tomtom/tcomment_vim'
@@ -49,6 +49,10 @@ Bundle 'digitaltoad/vim-jade'
 Bundle 'jpalardy/spacehi.vim'
 Bundle 'tpope/vim-sleuth'
 Bundle 'maksimr/vim-jsbeautify'
+Bundle 'ternjs/tern_for_vim'
+Bundle 'SirVer/ultisnips'
+Bundle 'honza/vim-snippets'
+Bundle 'ervandew/supertab'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -89,7 +93,8 @@ if &t_Co > 2 || has("gui_running")
     let g:solarized_termcolors=256
     syntax enable
     set background=dark
-    colorscheme solarized
+    colorscheme Tomorrow-Night
+    " colorscheme solarized
     " colorscheme darkdesert
     set guioptions=egmt
     highlight SpellBad term=underline gui=undercurl guisp=Orange
@@ -147,9 +152,9 @@ nmap <Leader>x <Plug>ToggleAutoCloseMappings
 
 " comment mappings
 nmap <Leader>c :TComment<CR>
-nmap <Leader>cj :TCommentAs javascript<CR>
+" nmap <Leader>cj :TCommentAs javascript<CR>
 vmap <Leader>c :TComment<CR>
-vmap <Leader>cj :TCommentAs javascript<CR>
+" vmap <Leader>cj :TCommentAs javascript<CR>
 
 " quickly close all
 nnoremap Q :qall<CR>
@@ -196,11 +201,17 @@ let g:ctrlp_cmd = 'CtrlP getcwd()'
 nmap <leader>p :CtrlPLine<CR>
 
 " supertab
-let g:SuperTabDefaultCompletionType = "context"
-set completeopt=menuone,longest,preview
-inoremap <nul> <c-x><c-i>
-inoremap <C-Space> <c-x><c-i>
-inoremap <S-Tab> <c-x><c-i>
+let g:SuperTabDefaultCompletionType = "<C-n>"
+let g:SuperTabCrMapping                = 0
+let g:UltiSnipsExpandTrigger           = '<tab>'
+let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
+" set completeopt=menuone,longest,preview
+" inoremap <nul> <c-x><c-i>
+" inoremap <C-Space> <c-x><c-i>
+" inoremap <S-Tab> <c-x><c-i>
 
 
 " preview windows
@@ -216,11 +227,6 @@ nnoremap <silent> <S-left> :wincmd h<CR>
 nnoremap <silent> <S-right> :wincmd l<CR>
 nnoremap <silent> <S-down> :wincmd j<CR>
 nnoremap <silent> <S-up> :wincmd k<CR>
-
-" Change directory
-nnoremap <leader>b :cd ~/src/chef/Backend<CR>
-nnoremap <leader>f :cd ~/src/chef/Frontend<CR>
-nnoremap <leader>r :cd ~/src/rainmaking/thehub<CR>
 
 nnoremap <leader>v :vsplit<CR>
 nnoremap <leader>s :split<CR>
@@ -256,6 +262,9 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:ycm_filetype_blacklist = { 'xml': 1 }
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 nnoremap <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" Tern
+nnoremap <leader>e :TernRename<CR>
 
 " Syntatistic
 let g:syntastic_python_checkers=['pyflakes']
@@ -308,3 +317,12 @@ map  N <Plug>(easymotion-prev)
 
 " ft improved
 let g:ft_improved_ignorecase = 1
+
+" Fugitive
+nmap <leader>gw :Gwrite<CR>
+nmap <leader>gc :Gcommit<CR>
+nmap <leader>gb :Gbrowse<CR>
+nmap <leader>gp :Gpush<CR>
+nmap <leader>gs :Gstatus<CR>
+nmap <leader>gd :Gdiff<CR>
+nmap <leader>gr :Gread<CR>
