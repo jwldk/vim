@@ -12,7 +12,7 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Gundo'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'scrooloose/nerdtree'
-Bundle 'spf13/vim-autoclose'
+""Bundle 'spf13/vim-autoclose'
 Bundle 'mileszs/ack.vim'
 Bundle 'bufkill.vim'
 Bundle 'tpope/vim-fugitive'
@@ -26,7 +26,6 @@ Bundle 'python_match.vim'
 Bundle 'Indent-Guides'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'surround.vim'
-Bundle 'walm/jshint.vim'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 Bundle 'ctrlp.vim'
@@ -39,10 +38,9 @@ Bundle 'wikitopian/hardmode'
 Bundle 'kana/vim-textobj-user'
 Bundle 'bps/vim-textobj-python'
 Bundle 'tpope/vim-repeat'
-Bundle 'svermeulen/vim-easyclip'
+" Bundle 'svermeulen/vim-easyclip'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'wellle/targets.vim'
-Bundle 'wakatime/vim-wakatime'
 Bundle 'chrisbra/improvedft'
 Bundle 'junegunn/vim-peekaboo'
 Bundle 'digitaltoad/vim-jade'
@@ -53,6 +51,15 @@ Bundle 'ternjs/tern_for_vim'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'ervandew/supertab'
+Bundle 'Raimondi/delimitMate'
+Bundle 'buztard/vim-rel-jump'
+Bundle 'tpope/vim-rails'
+Bundle 'maxbrunsfeld/vim-yankstack'
+Bundle 'pangloss/vim-javascript'
+Bundle 'mxw/vim-jsx'
+Bundle 'digitaltoad/vim-pug'
+Bundle 'mtscout6/syntastic-local-eslint.vim'
+Bundle 'ruanyl/vim-fixmyjs'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -71,9 +78,9 @@ set showcmd
 set incsearch
 set expandtab
 set autoindent
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set shiftround
 set showmatch
 set smarttab
@@ -84,6 +91,8 @@ set relativenumber
 set nohlsearch
 set vb
 set cursorline
+
+set matchpairs+=<:>
 
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -120,24 +129,30 @@ autocmd BufReadPost *
 au BufRead,BufNewFile *.py set list " show tabs, so we can hunt them down and kill them
 au BufRead,BufNewFile *.py set listchars=tab:>-"
 
-" Auto save on enter normal mode
-au InsertLeave <buffer> update
-
 
 " filetype completion
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType jade set noexpandtab
+autocmd FileType jade set expandtab
+autocmd FileType pug set expandtab shiftwidth=2 softtabstop=2
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType less set ft=css
-
+autocmd FileType ruby set ft=rails.ruby
 augroup END
+
+let g:jsx_ext_required = 0
+
+let g:dash_map = {
+    \ 'javascript': 'javascript underscore chai jquery mongoose nodejs'
+\ }
 
 let mapleader = ","
 
 let python_version_2 = 1
 
 nnoremap gp `[v`]
+vnoremap < <gv
+vnoremap > >gv
 
 " Ctrl-S to save
 noremap <silent> <C-S>          :update<CR>
@@ -160,10 +175,10 @@ vmap <Leader>c :TComment<CR>
 nnoremap Q :qall<CR>
 
 " Copy to clipboard
-" nnoremap <F5> "+y
+nnoremap <F5> "+y
 "
 " " Paste from clipboard
-" nnoremap <F6> "+p
+nnoremap <F6> "+p
 
 " Taglist variables
 let g:ctags_statusline=1
@@ -213,7 +228,7 @@ let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
 " inoremap <C-Space> <c-x><c-i>
 " inoremap <S-Tab> <c-x><c-i>
 
-
+nmap <C-l> :close<CR>
 " preview windows
 nnoremap <F16> :ccl<CR>:pc<CR>
 
@@ -227,22 +242,26 @@ nnoremap <silent> <S-left> :wincmd h<CR>
 nnoremap <silent> <S-right> :wincmd l<CR>
 nnoremap <silent> <S-down> :wincmd j<CR>
 nnoremap <silent> <S-up> :wincmd k<CR>
+nnoremap H :wincmd h<CR>
+nnoremap L :wincmd l<CR>
+nnoremap J :wincmd j<CR>
+nnoremap K :wincmd k<CR>
 
 nnoremap <leader>v :vsplit<CR>
 nnoremap <leader>s :split<CR>
+nnoremap <leader>st :set expandtab shiftwidth=2 softtabstop=2<CR>
 " gundo
 nnoremap <leader>u :GundoToggle<CR>
 
 " ack
-let g:ackprg="/usr/local/bin/ag -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags --ignore-dir=backend/docs --ignore-dir=web/assets --ignore-dir=src/"
+let g:ackprg="/usr/local/bin/ag -Q -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags --ignore-dir=backend/docs --ignore-dir=web/assets/precompiled --ignore-dir=web/assets/libs --ignore-dir=src/js"
 nmap <leader>a <Esc>:Ack!
 
 noremap <F19> :set hlsearch! hlsearch?<CR>
 
-nnoremap <leader>m m
-
-" Conque
-nmap <leader>t :ConqueTerm bash<CR>
+" Dash
+nmap <leader>d <Plug>DashSearch
+nmap <leader>D <Plug>DashGlobalSearch
 
 inoremap jk <esc> 
 nmap - "
@@ -261,13 +280,25 @@ let g:indent_guides_enable_on_vim_startup = 1
 " YCM
 let g:ycm_filetype_blacklist = { 'xml': 1 }
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
-nnoremap <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_auto_trigger = 0
+nnoremap <leader>gt :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Tern
 nnoremap <leader>e :TernRename<CR>
 
 " Syntatistic
 let g:syntastic_python_checkers=['pyflakes']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_always_populate_loc_list=1
+function! FixJS()
+    "Save current cursor position"
+    let l:winview = winsaveview()
+    "run eslint fix on current buffer"
+    ! ./node_modules/.bin/eslint --fix %
+    "Restore cursor position"
+    call winrestview(l:winview)
+endfunction
+command! FixJS :call FixJS()
 
 " Airline
 set laststatus=2
@@ -278,8 +309,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 
-" Middle of screen with space
-nmap <space> zz
+nmap <Space> :
+nmap <S-Space> /
 
 " Avoid setting caps with u
 vmap u <nop>
@@ -287,6 +318,10 @@ vmap U <nop>
 
 " Hardmode
 nnoremap <leader>H <Esc>:call ToggleHardMode()<CR>
+nmap <left> <nop>
+nmap <right> <nop>
+nmap <up> <nop>
+nmap <down> <nop>
 
 " python textblock
 nmap <leader>nf ]pf
@@ -299,7 +334,7 @@ nmap <leader>pc [pc
 
 " EasyMotion config
 let g:EasyMotion_do_mapping = 0 " Disable default mappings"
-nmap s <Plug>(easymotion-s2)
+nmap s <Plug>(easymotion-s)
 let g:EasyMotion_smartcase = 1
 
 " HJKL motions: Line motions
@@ -314,6 +349,7 @@ omap / <Plug>(easymotion-tn)
 
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
+map  <Leader>w <Plug>(easymotion-bd-w)
 
 " ft improved
 let g:ft_improved_ignorecase = 1
@@ -326,3 +362,11 @@ nmap <leader>gp :Gpush<CR>
 nmap <leader>gs :Gstatus<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gr :Gread<CR>
+
+" Danish keyboard
+imap æ [
+imap ø ]
+imap Æ {
+imap Ø }
+
+imap <C-b> { }<Esc>hr<cr>O
