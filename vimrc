@@ -24,7 +24,7 @@ Bundle 'pythoncomplete'
 Bundle 'python.vim'
 Bundle 'python_match.vim'
 Bundle 'Indent-Guides'
-Bundle 'Valloric/YouCompleteMe'
+" Bundle 'Valloric/YouCompleteMe'
 Bundle 'surround.vim'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
@@ -47,7 +47,7 @@ Bundle 'digitaltoad/vim-jade'
 Bundle 'jpalardy/spacehi.vim'
 Bundle 'tpope/vim-sleuth'
 Bundle 'maksimr/vim-jsbeautify'
-Bundle 'ternjs/tern_for_vim'
+" Bundle 'ternjs/tern_for_vim'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'ervandew/supertab'
@@ -60,6 +60,9 @@ Bundle 'mxw/vim-jsx'
 Bundle 'digitaltoad/vim-pug'
 Bundle 'mtscout6/syntastic-local-eslint.vim'
 Bundle 'ruanyl/vim-fixmyjs'
+Bundle 'morhetz/gruvbox'
+Bundle 'w0ng/vim-hybrid'
+Bundle 'Yggdroot/indentLine'
 
 " Enable file type detection.
 filetype plugin indent on
@@ -90,7 +93,7 @@ set number
 set relativenumber
 set nohlsearch
 set vb
-set cursorline
+" set cursorline
 
 set matchpairs+=<:>
 
@@ -100,9 +103,12 @@ set matchpairs+=<:>
 if &t_Co > 2 || has("gui_running")
     let g:solarized_contrast="high"
     let g:solarized_termcolors=256
+    let g:gruvbox_contrast_dark="hard" 
     syntax enable
     set background=dark
-    colorscheme Tomorrow-Night
+    " colorscheme molokai
+    colorscheme gruvbox
+    " colorscheme Tomorrow-Night
     " colorscheme solarized
     " colorscheme darkdesert
     set guioptions=egmt
@@ -138,9 +144,10 @@ autocmd FileType pug set expandtab shiftwidth=2 softtabstop=2
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType less set ft=css
 autocmd FileType ruby set ft=rails.ruby
+autocmd Filetype json let g:indentLine_setConceal = 0
 augroup END
 
-let g:jsx_ext_required = 0
+let g:jsx_ext_required = 1
 
 let g:dash_map = {
     \ 'javascript': 'javascript underscore chai jquery mongoose nodejs'
@@ -150,7 +157,8 @@ let mapleader = ","
 
 let python_version_2 = 1
 
-nnoremap gp `[v`]
+" nnoremap vp `[v`]
+nnoremap <expr> vp '`[' . strpart(getregtype(), 0, 1) . '`]'
 vnoremap < <gv
 vnoremap > >gv
 
@@ -230,10 +238,11 @@ let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
 
 nmap <C-l> :close<CR>
 " preview windows
-nnoremap <F16> :ccl<CR>:pc<CR>
+nnoremap <F16> :ccl<CR>:pc<CR>:close<CR>
 
 " minibuf toggle
-nnoremap <F14> :CtrlPBuffer<CR>
+" nnoremap <F14> :CtrlPBuffer<CR>
+nmap <F14> :set cursorcolumn!<CR>
 nmap <F17> :bprev<CR>
 nmap <F18> :bnext<CR>
 
@@ -269,13 +278,14 @@ vmap - "
 vmap Y "+y
 
 " For some colorschemes, autocolor will not work (eg: 'desert', 'ir_black')
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
-
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#404040 ctermbg=4
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
+"
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#404040 ctermbg=4
 let g:indent_guides_exclude_filetypes = ['nerdtree']
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_enable_on_vim_startup = 0
+let g:indentLine_indentLevel = 20
 
 " YCM
 let g:ycm_filetype_blacklist = { 'xml': 1 }
@@ -284,7 +294,9 @@ let g:ycm_auto_trigger = 0
 nnoremap <leader>gt :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Tern
-nnoremap <leader>e :TernRename<CR>
+nnoremap <leader>td :TernDef<CR>
+nnoremap <leader>tr :TernRename<CR>
+nnoremap <leader>tf :TernRefs<CR>
 
 " Syntatistic
 let g:syntastic_python_checkers=['pyflakes']
