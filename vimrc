@@ -1,10 +1,12 @@
-set nocompatible
-:set dir=~/src/.swp
+set encoding=utf-8
+scriptencoding utf-8
+set shell=/bin/bash
+set directory=~/src/.swp
 
 " Bundle
 filetype off                   " required!
 
-set rtp+=~/.vim/bundle/Vundle.vim
+set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
 Bundle 'gmarik/Vundle.vim'
@@ -12,28 +14,26 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Gundo'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'scrooloose/nerdtree'
-""Bundle 'spf13/vim-autoclose'
+" Bundle 'spf13/vim-autoclose'
 Bundle 'mileszs/ack.vim'
 Bundle 'bufkill.vim'
 Bundle 'tpope/vim-fugitive'
-Bundle 'taglist.vim'
+" Bundle 'taglist.vim'
 Bundle 'Tagbar'
-Bundle 'AutoTag'
-Bundle 'pythonhelper'
-Bundle 'pythoncomplete'
-Bundle 'python.vim'
+" Bundle 'AutoTag'
+Bundle 'mgedmin/pythonhelper.vim'
+" Bundle 'pythoncomplete'
 Bundle 'python_match.vim'
-Bundle 'Indent-Guides'
 " Bundle 'Valloric/YouCompleteMe'
-Bundle 'surround.vim'
+" Bundle 'surround.vim'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 Bundle 'ctrlp.vim'
 Bundle 'bling/vim-airline'
 Bundle 'vim-airline/vim-airline-themes'
 Bundle 'scrooloose/syntastic'
-Bundle 'tpope/vim-surround'
-Bundle 'oplatek/Conque-Shell'
+" Bundle 'tpope/vim-surround'
+" Bundle 'oplatek/Conque-Shell'
 Bundle 'wikitopian/hardmode'
 Bundle 'kana/vim-textobj-user'
 Bundle 'bps/vim-textobj-python'
@@ -53,7 +53,7 @@ Bundle 'honza/vim-snippets'
 Bundle 'ervandew/supertab'
 Bundle 'Raimondi/delimitMate'
 Bundle 'buztard/vim-rel-jump'
-Bundle 'tpope/vim-rails'
+" Bundle 'tpope/vim-rails'
 Bundle 'maxbrunsfeld/vim-yankstack'
 Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
@@ -81,9 +81,9 @@ set showcmd
 set incsearch
 set expandtab
 set autoindent
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 set shiftround
 set showmatch
 set smarttab
@@ -92,7 +92,7 @@ set hidden
 set number
 set relativenumber
 set nohlsearch
-set vb
+set visualbell
 " set cursorline
 
 set matchpairs+=<:>
@@ -100,10 +100,10 @@ set matchpairs+=<:>
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also some MacVim GUI settings
-if &t_Co > 2 || has("gui_running")
-    let g:solarized_contrast="high"
+if &t_Co > 2 || has('gui_running')
+    let g:solarized_contrast='high'
     let g:solarized_termcolors=256
-    let g:gruvbox_contrast_dark="hard" 
+    let g:gruvbox_contrast_dark='hard' 
     syntax enable
     set background=dark
     " colorscheme molokai
@@ -137,7 +137,7 @@ au BufRead,BufNewFile *.py set listchars=tab:>-"
 
 
 " filetype completion
-autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType python set omnifunc=pythoncomplete#Complete colorcolumn=80
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType jade set expandtab
 autocmd FileType pug set expandtab shiftwidth=2 softtabstop=2
@@ -150,12 +150,10 @@ augroup END
 let g:jsx_ext_required = 1
 
 let g:dash_map = {
-    \ 'javascript': 'javascript underscore chai jquery mongoose nodejs'
+    \ 'javascript': 'javascript underscore chai jquery mongoose nodejs python'
 \ }
 
-let mapleader = ","
-
-let python_version_2 = 1
+let g:mapleader = ','
 
 " nnoremap vp `[v`]
 nnoremap <expr> vp '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -188,43 +186,31 @@ nnoremap <F5> "+y
 " " Paste from clipboard
 nnoremap <F6> "+p
 
-" Taglist variables
-let g:ctags_statusline=1
-let generate_tags=1
-let Tlist_Use_Horiz_Window=0
-nnoremap TT :TlistToggle<CR>
-nnoremap <F15> :TagbarToggle<CR>
-let Tlist_Auto_Update = 1
-let Tlist_Show_Menu = 1
-let Tlist_Use_Right_Window = 1
-let Tlist_Compact_Format = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_File_Fold_Auto_Close = 1
-let Tlist_Ctags_Cmd = "/usr/local/bin/ctags" 
-
 " tagging
-let g:autotagCtagsCmd ="/usr/local/bin/ctags --python-kinds=-i"
-nmap <leader>tp <c-W>}
-nmap <leader>tg <c-]>
-nmap <leader>tl g]
+let g:autotagCtagsCmd ='/usr/local/bin/ctags --python-kinds=-i'
+let g:autotagTagsFile='.git/tags'
+let g:tagbar_compact = 1
+let g:tagbar_show_linenumbers = -1
+let g:tagbar_foldlevel = 99
+let g:tagbar_autoshowtag = 1
+nmap <leader>tt :TagbarOpen j<CR>
 
 " nerdtree
-let NERDTreeShowLineNumbers=1
-let NERDTreeChDirMode = 2 " useful with command-t (sets CWD)
-let NERDTreeShowBookmarks = 1
-let NERDTreeIgnore = ['\.pyc$', 'xmls']
+let g:NERDTreeShowLineNumbers=1
+let g:NERDTreeChDirMode = 2 " useful with command-t (sets CWD)
+let g:NERDTreeShowBookmarks = 1
+let g:NERDTreeIgnore = ['\.pyc$', 'xmls']
 
 nnoremap <silent> <F13> :NERDTreeToggle<CR>
 
 " ctrl p
-set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*
+set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*,*egg-info*
 let g:ctrlp_custom_ignore = 'xmls'
 let g:ctrlp_cmd = 'CtrlP getcwd()'
 nmap <leader>p :CtrlPLine<CR>
 
 " supertab
-let g:SuperTabDefaultCompletionType = "<C-n>"
+let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabCrMapping                = 0
 let g:UltiSnipsExpandTrigger           = '<tab>'
 let g:UltiSnipsJumpForwardTrigger      = '<tab>'
@@ -263,7 +249,7 @@ nnoremap <leader>st :set expandtab shiftwidth=2 softtabstop=2<CR>
 nnoremap <leader>u :GundoToggle<CR>
 
 " ack
-let g:ackprg="/usr/local/bin/ag -Q -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags --ignore-dir=backend/docs --ignore-dir=web/assets/precompiled --ignore-dir=web/assets/libs --ignore-dir=src/js"
+let g:ackprg='/usr/local/bin/ag -Q -i --nocolor --nogroup --column --ignore-dir=venv --ignore-dir=web/app/i18n --ignore tags --ignore-dir=backend/docs --ignore-dir=web/assets/precompiled --ignore-dir=web/assets/libs --ignore-dir=src/js'
 nmap <leader>a <Esc>:Ack!
 
 noremap <F19> :set hlsearch! hlsearch?<CR>
@@ -293,13 +279,8 @@ let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 let g:ycm_auto_trigger = 0
 nnoremap <leader>gt :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-" Tern
-nnoremap <leader>td :TernDef<CR>
-nnoremap <leader>tr :TernRename<CR>
-nnoremap <leader>tf :TernRefs<CR>
-
 " Syntatistic
-let g:syntastic_python_checkers=['pyflakes']
+let g:syntastic_python_checkers=['flake8']
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_always_populate_loc_list=1
 function! FixJS()
@@ -346,7 +327,7 @@ nmap <leader>pc [pc
 
 " EasyMotion config
 let g:EasyMotion_do_mapping = 0 " Disable default mappings"
-nmap s <Plug>(easymotion-s)
+nnoremap s <Plug>(easymotion-s)
 let g:EasyMotion_smartcase = 1
 
 " HJKL motions: Line motions
@@ -380,5 +361,8 @@ imap æ [
 imap ø ]
 imap Æ {
 imap Ø }
+
+" Peekabo
+let g:peekaboo_window = 'vertical botright 50new'
 
 imap <C-b> { }<Esc>hr<cr>O
