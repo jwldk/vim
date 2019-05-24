@@ -6,78 +6,16 @@ set autoread
 au FocusGained,BufEnter * :silent! !
 
 " Bundle
-filetype off                   " required!
+filetype off
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.config/nvim/bundle/Vundle.vim
+call vundle#begin('~/.config/nvim/bundle')
 
-set runtimepath+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 
-Bundle 'gmarik/Vundle.vim'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'Gundo'
-Bundle 'tomtom/tcomment_vim'
-Bundle 'scrooloose/nerdtree'
-" Bundle 'spf13/vim-autoclose'
-Bundle 'mileszs/ack.vim'
-Bundle 'bufkill.vim'
-Bundle 'tpope/vim-fugitive'
-" Bundle 'taglist.vim'
-Bundle 'Tagbar'
-" Bundle 'AutoTag'
-Bundle 'mgedmin/pythonhelper.vim'
-" Bundle 'pythoncomplete'
-Bundle 'python_match.vim'
-" Bundle 'Valloric/YouCompleteMe'
-" Bundle 'surround.vim'
-Bundle 'rizzatti/funcoo.vim'
-Bundle 'rizzatti/dash.vim'
-Bundle 'ctrlp.vim'
-Bundle 'bling/vim-airline'
-Bundle 'vim-airline/vim-airline-themes'
-Bundle 'scrooloose/syntastic'
-" Bundle 'tpope/vim-surround'
-" Bundle 'oplatek/Conque-Shell'
-" Bundle 'wikitopian/hardmode'
-Bundle 'kana/vim-textobj-user'
-Bundle 'bps/vim-textobj-python'
-Bundle 'tpope/vim-repeat'
-" Bundle 'svermeulen/vim-easyclip'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'wellle/targets.vim'
-Bundle 'chrisbra/improvedft'
-Bundle 'junegunn/vim-peekaboo'
-" Bundle 'digitaltoad/vim-jade'
-Bundle 'jpalardy/spacehi.vim'
-Bundle 'tpope/vim-sleuth'
-Bundle 'maksimr/vim-jsbeautify'
-" Bundle 'ternjs/tern_for_vim'
-" Bundle 'SirVer/ultisnips'
-" Bundle 'honza/vim-snippets'
-Bundle 'ervandew/supertab'
-" Bundle 'Raimondi/delimitMate'
-Bundle 'buztard/vim-rel-jump'
-" Bundle 'tpope/vim-rails'
-Bundle 'maxbrunsfeld/vim-yankstack'
-" Bundle 'pangloss/vim-javascript'
-" Bundle 'mxw/vim-jsx'
-" Bundle 'digitaltoad/vim-pug'
-" Bundle 'mtscout6/syntastic-local-eslint.vim'
-" Bundle 'ruanyl/vim-fixmyjs'
-Bundle 'morhetz/gruvbox'
-Bundle 'w0ng/vim-hybrid'
-" Bundle 'Yggdroot/indentLine'
-Bundle 'Vimjas/vim-python-pep8-indent'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'davidhalter/jedi-vim'
-Bundle 'tell-k/vim-autopep8'
-Bundle 'tmux-plugins/vim-tmux-focus-events'
-Bundle 'tpope/vim-rsi'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'dyng/ctrlsf.vim'
-Bundle 'jeffkreeftmeijer/vim-numbertoggle'
-Bundle 'luochen1990/rainbow'
-Bundle 'vim-scripts/tcd.vim'
-Bundle 'airblade/vim-rooter'
-
+" All of your Plugins must be added before the following line
+call vundle#end()
 
 " Enable file type detection.
 filetype plugin indent on
@@ -113,13 +51,37 @@ set scrolljump=8
 
 set matchpairs+=<:>
 
+set rtp+=/usr/local/bin/fzf
+
+" Plugins
+Plugin 'morhetz/gruvbox'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'mileszs/ack.vim'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'maxbrunsfeld/vim-yankstack'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'airblade/vim-rooter'
+Plugin 'buztard/vim-rel-jump'
+Plugin 'junegunn/vim-peekaboo'
+Plugin 'chrisbra/improvedft'
+Plugin 'rizzatti/dash.vim'
+Plugin 'bufkill.vim'
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'deoplete-plugins/deoplete-jedi'
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also some MacVim GUI settings
 if &t_Co > 2 || has('gui_running')
     let g:solarized_contrast='high'
     let g:solarized_termcolors=256
-    let g:gruvbox_contrast_dark='high' 
+    let g:gruvbox_contrast_dark='high'
     syntax enable
     set background=dark
     " colorscheme nofrils-dark
@@ -132,43 +94,6 @@ if &t_Co > 2 || has('gui_running')
     " highlight SpellBad term=underline gui=undercurl guisp=Orange
     " set guifont=Hack:h14
 endif
-
-" Put these in an autocmd group, so that we can delete them easily.
-augroup vimrcEx
-au!
-
-" For all text files set 'textwidth' to 75 characters.
-autocmd BufRead,BufNewFile *.txt
-\ setlocal textwidth=75 wrap formatoptions=tcqn
-
-" When editing a file, always jump to the last known cursor position.
-" Don't do it when the position is invalid or when inside an event handler
-" (happens when dropping a file on gvim).
-autocmd BufReadPost *
-\ if line("'\"") > 0 && line("'\"") <= line("$") |
-\   exe "normal g`\"" |
-\ endif
-
-au BufRead,BufNewFile *.py set list " show tabs, so we can hunt them down and kill them
-au BufRead,BufNewFile *.py set listchars=tab:>-"
-
-
-" filetype completion
-autocmd FileType python set colorcolumn=80
-autocmd FileType jade set expandtab
-autocmd FileType pug set expandtab shiftwidth=2 softtabstop=2
-autocmd FileType less set ft=css
-autocmd FileType ruby set ft=rails.ruby
-autocmd Filetype json let g:indentLine_setConceal = 0
-augroup END
-
-call yankstack#setup()
-
-let g:jsx_ext_required = 1
-
-let g:dash_map = {
-    \ 'javascript': 'javascript underscore chai jquery mongoose nodejs python'
-\ }
 
 let g:mapleader = ','
 
@@ -185,149 +110,45 @@ inoremap <silent> <C-S>         <C-O>:update<CR>
 " Autoinsert ipdb
 nmap <leader>i oimport ipdb; ipdb.set_trace()<esc>
 
-" comment mappings
-nmap <Leader>c :TComment<CR>
-" nmap <Leader>cj :TCommentAs javascript<CR>
-vmap <Leader>c :TComment<CR>
-" vmap <Leader>cj :TCommentAs javascript<CR>
-
 " quickly close all
 nnoremap Q :qall<CR>
-
-" Copy to clipboard
-vnoremap <F5> "+y
-"
-" " Paste from clipboard
-nnoremap <F6> "+p
-
-" tagging
-" let g:autotagCtagsCmd ='/usr/local/bin/ctags --python-kinds=-i'
-" let g:autotagTagsFile='.git/tags'
-let g:tagbar_compact = 1
-let g:tagbar_show_linenumbers = -1
-let g:tagbar_foldlevel = 99
-let g:tagbar_autoshowtag = 1
-nmap <leader>tt :TagbarOpen j<CR>
-
-" nerdtree
-let g:NERDTreeShowLineNumbers=1
-let g:NERDTreeChDirMode = 2 " useful with command-t (sets CWD)
-let g:NERDTreeShowBookmarks = 1
-let g:NERDTreeIgnore = ['\.pyc$', 'xmls']
-
-nnoremap <silent> <F13> :NERDTreeToggle<CR>
-
-" ctrl p
-set wildignore+=.git,*.pyc,*/venv/,*/xmls/*,*/log/*,*/node_modules/*,*/web/assets/precompiled/*,*/vendor/*,*/web/assets/libs/*,*egg-info*
-let g:ctrlp_custom_ignore = 'xmls'
-let g:ctrlp_cmd = 'CtrlP getcwd()'
-let g:ctrlp_working_path_mode = 'r'
-nmap <leader>p :CtrlPLine<CR>
-
-" supertab
-let g:SuperTabDefaultCompletionType = '<C-n>'
-" let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-let g:SuperTabCrMapping                = 0
-let g:UltiSnipsExpandTrigger           = '<tab>'
-let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
-let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
-let g:ycm_confirm_extra_conf = 0
-" set completeopt=menuone,longest,preview
-" inoremap <nul> <c-x><c-i>
-" inoremap <C-Space> <c-x><c-i>
-" inoremap <S-Tab> <c-x><c-i>
-
 nmap <C-l> :close<CR>
 " preview windows
-nnoremap <F16> :ccl<CR>:pc<CR>:close<CR>
 nnoremap <leader>x :ccl<CR>:pc<CR>
-
-" minibuf toggle
-" nnoremap <F14> :CtrlPBuffer<CR>
-nmap <F14> :set cursorcolumn!<CR>
-nmap <F17> :bprev<CR>
-nmap <F18> :bnext<CR>
 
 " window navigation
 nnoremap <silent> <S-left> :wincmd h<CR>
 nnoremap <silent> <S-right> :wincmd l<CR>
 nnoremap <silent> <S-down> :wincmd j<CR>
 nnoremap <silent> <S-up> :wincmd k<CR>
-" nnoremap H :wincmd h<CR>
-" nnoremap L :wincmd l<CR>
-" nnoremap J :wincmd j<CR>
-" nnoremap K :wincmd k<CR>
 
+" splits
 nnoremap <leader>v :vsplit<CR>
 nnoremap <leader>s :split<CR>
-nnoremap <leader>ts :set expandtab shiftwidth=2 softtabstop=2<CR>
-" gundo
-nnoremap <leader>u :GundoToggle<CR>
 
 " ack
 let g:ackprg='/usr/local/bin/ag -Q -i'
 nmap <leader>a <Esc>:Ack!<Space>
 nmap <leader>A <Esc>:Ack! <cword><CR>
+nnoremap <leader>ts :set expandtab shiftwidth=2 softtabstop=2<CR>
 
-noremap <F19> :set hlsearch! hlsearch?<CR>
+nmap <Space> :
 
-" Dash
-nmap <leader>d <Plug>DashSearch
-nmap <leader>D <Plug>DashGlobalSearch
+" Adds j and k motions to jumplist
+nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'k'
+nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
 
-inoremap jk <esc> 
+" Avoid setting caps with u
+vmap u <nop>
+vmap U <nop>
+inoremap jk <esc>
 nmap - "
 vmap - "
 map Y "+y
 
-" For some colorschemes, autocolor will not work (eg: 'desert', 'ir_black')
-" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#212121 ctermbg=3
-"
-" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#404040 ctermbg=4
-let g:indent_guides_exclude_filetypes = ['nerdtree']
-let g:indent_guides_start_level = 2
-let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_vim_startup = 0
-let g:indentLine_indentLevel = 20
-
-" YCM
-let g:ycm_filetype_blacklist = { 'xml': 1 }
-let g:ycm_path_to_python_interpreter = '/usr/local/bin/python3.6'
-let g:ycm_auto_trigger = 0
-" nnoremap <leader>tg :YcmCompleter GoTo<CR>
-" nnoremap <leader>td :YcmCompleter GetDoc<CR>
-" nnoremap <leader>tr :YcmCompleter GoToReferences<CR>
-" nnoremap <leader>tl :YcmCompleter GoToDeclaration<CR>
-
-let g:jedi#completions_command = "<C-Space>"
-let g:jedi#goto_command = "<leader>tg"
-let g:jedi#goto_assignments_command = "<leader>ta"
-let g:jedi#goto_definitions_command = "<leader>td"
-let g:jedi#usages_command = "<leader>tu"
-let g:jedi#rename_command = "<leader>tr"
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = "2"
-let g:jedi#use_splits_not_buffers = "right"
-let g:jedi#force_py_version = 3
-
 " Syntatistic
 let g:syntastic_python_checkers=['flake8']
-let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_always_populate_loc_list=1
-function! FixJS()
-    "Save current cursor position"
-    let l:winview = winsaveview()
-    "run eslint fix on current buffer"
-    ! ./node_modules/.bin/eslint --fix %
-    "Restore cursor position"
-    call winrestview(l:winview)
-endfunction
-command! FixJS :call FixJS()
-
-let g:autopep8_diff_type='vertical'
-autocmd FileType python noremap <buffer> <leader>8 :call Autopep8()<CR>
 
 " Airline
 set laststatus=2
@@ -338,28 +159,6 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_theme='gruvbox'
-
-nmap <Space> :
-
-" Avoid setting caps with u
-vmap u <nop>
-vmap U <nop>
-
-" Hardmode
-nnoremap <leader>H <Esc>:call ToggleHardMode()<CR>
-nmap <left> <nop>
-nmap <right> <nop>
-nmap <up> <nop>
-nmap <down> <nop>
-
-" python textblock
-nmap <leader>nf ]pf
-nmap <leader>pf [pf
-nmap <leader>nc ]pc
-nmap <leader>pc [pc
-
-" Prefering single tick
-" nmap ' `
 
 " EasyMotion config
 let g:EasyMotion_do_mapping = 0 " Disable default mappings"
@@ -380,9 +179,26 @@ omap / <Plug>(easymotion-tn)
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
 map  <Leader>w <Plug>(easymotion-bd-w)
+" FZF
+nnoremap <silent> <leader><space> :Files<CR>
+nnoremap <silent> <C-p> :Files<CR>
+nnoremap <silent> <leader>oc :Files ~/src/oc/<CR>
 
-" ft improved
-let g:ft_improved_ignorecase = 1
+
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
 " Fugitive
 nmap <leader>gw :Gwrite<CR>
@@ -393,20 +209,39 @@ nmap <leader>gs :Gstatus<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gr :Gread<CR>
 
+" jedi
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#completions_enabled = 0
+let g:jedi#goto_command = "<leader>tg"
+let g:jedi#goto_assignments_command = "<leader>ta"
+let g:jedi#goto_definitions_command = "<leader>td"
+let g:jedi#usages_command = "<leader>tu"
+let g:jedi#rename_command = "<leader>tr"
+" let g:jedi#popup_on_dot = 1
+let g:jedi#show_call_signatures = "2"
+let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#force_py_version = 3
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
+let g:python3_host_prog = '/usr/local/bin/python3'
+
+" TComment
+nmap <Leader>c :TComment<CR>
+vmap <Leader>c :TComment<CR>
+
+" Yankstack
+call yankstack#setup()
+
+" chdir rooter
+let g:rooter_silent_chdir = 1
+
 " Peekabo
 let g:peekaboo_window = 'vertical botright 50new'
 
-imap <C-b> { }<Esc>hr<cr>O
-
-" Adds j and k motions to jumplist
-nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'k'
-nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
-
-" Allow saving of files as sudo when I forgot to start vim using sudo.
-cmap w!! w !sudo tee > /dev/null %
-let g:rainbow_active = 1
-
-let g:rooter_silent_chdir = 1
+" Dash
+nmap <leader>d <Plug>DashSearch
+nmap <leader>D <Plug>DashGlobalSearch
 
 " Stuff from vimways
 function! s:inIndentation()
