@@ -3,6 +3,7 @@ scriptencoding utf-8
 set shell=/bin/sh
 set directory=~/src/.swp
 set autoread
+set mouse=a
 au FocusGained,BufEnter * :silent! !
 
 " Bundle
@@ -54,27 +55,43 @@ set matchpairs+=<:>
 set rtp+=/usr/local/bin/fzf
 
 " Plugins
-Plugin 'morhetz/gruvbox'
+Plugin 'gruvbox-community/gruvbox'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'mileszs/ack.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-airline/vim-airline'
-Plugin 'vim-syntastic/syntastic'
+" Plugin 'vim-syntastic/syntastic'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'davidhalter/jedi-vim'
+" Plugin 'davidhalter/jedi-vim'
 Plugin 'tomtom/tcomment_vim'
-Plugin 'maxbrunsfeld/vim-yankstack'
+" Plugin 'maxbrunsfeld/vim-yankstack'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'airblade/vim-rooter'
 Plugin 'buztard/vim-rel-jump'
 Plugin 'junegunn/vim-peekaboo'
 Plugin 'chrisbra/improvedft'
-Plugin 'rizzatti/dash.vim'
+" Plugin 'rizzatti/dash.vim'
 Plugin 'bufkill.vim'
-Plugin 'Shougo/deoplete.nvim'
-Plugin 'deoplete-plugins/deoplete-jedi'
+" Plugin 'Shougo/deoplete.nvim'
+" Plugin 'deoplete-plugins/deoplete-jedi'
+" Plugin 'jiangmiao/auto-pairs'
+Plugin 'jeetsukumaran/vim-pythonsense'
+Plugin 'numirias/semshi'
+Plugin 'sheerun/vim-polyglot'
+Plugin 'neovim/nvim-lspconfig'
+Plugin 'RishabhRD/popfix'
+Plugin 'RishabhRD/nvim-lsputils'
+Plugin 'hrsh7th/nvim-cmp'
+Plugin 'hrsh7th/cmp-nvim-lsp'
+Plugin 'hrsh7th/cmp-buffer'
+Plugin 'saadparwaiz1/cmp_luasnip'
+Plugin 'L3MON4D3/LuaSnip'
+" Plugin 'justinmk/vim-sneak'
+Plugin 'dense-analysis/ale'
+Plugin 'nvim-treesitter/nvim-treesitter'
+Plugin 'mhinz/vim-startify'
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also some MacVim GUI settings
@@ -96,6 +113,137 @@ if &t_Co > 2 || has('gui_running')
 endif
 
 let g:mapleader = ','
+
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\   exe "normal g`\"" |
+\ endif
+
+let g:python3_host_prog = '/usr/local/opt/python@3.10/bin/python3'
+
+" startify
+function! s:gitModified()
+    let files = systemlist('git ls-files -m 2>/dev/null')
+    return map(files, "{'line': v:val, 'path': v:val}")
+endfunction
+
+
+let g:startify_lists = [
+            \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+            \ { 'type': 'sessions',  'header': ['   Sessions']       },
+            \ { 'type': function('s:gitModified'),  'header': ['   git modified']},
+            \ { 'type': 'commands',  'header': ['   Commands']       },
+            \ ]
+
+lua << EOF
+
+
+-- Use an on_attach function to only map the following keys
+-- after the language server, attaches to the current buffer
+local nvim_lsp = require('lspconfig')
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<leader>u', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('i', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
+end
+
+-- Set completeopt to have a better completion experience
+vim.o.completeopt = 'menuone,noselect'
+
+-- luasnip setup
+local luasnip = require 'luasnip'
+
+-- nvim-cmp setup
+local cmp = require 'cmp'
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
+  mapping = {
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end,
+    ['<S-Tab>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end,
+    ['<Down>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end,
+    ['<Up>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end,
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'buffer' },
+  },
+}
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { 'pyright' }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+EOF
+
+lua vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
+
+let g:ale_linters = {'python': ['pyright']}
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " nnoremap vp `[v`]
 nnoremap <expr> vp '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -142,13 +290,21 @@ nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
 vmap u <nop>
 vmap U <nop>
 inoremap jk <esc>
+
+" Yanks and registers
+" call yankstack#setup()
 nmap - "
 vmap - "
-map Y "+y
+vnoremap Y "+y
+" map <leader>y :Yanks<CR>
+" nmap <leader>p <Plug>yankstack_substitute_older_paste
+" nmap <leader>p <Plug>yankstack_substitute_older_paste
+" nmap <leader>P <Plug>yankstack_substitute_newer_paste
 
 " Syntatistic
-let g:syntastic_python_checkers=['flake8']
+let g:syntastic_python_checkers=['python']
 let g:syntastic_always_populate_loc_list=1
+let g:syntastic_quiet_messages = { "type": "style" }
 
 " Airline
 set laststatus=2
@@ -161,8 +317,7 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_theme='gruvbox'
 
 " EasyMotion config
-let g:EasyMotion_do_mapping = 0 " Disable default mappings"
-nmap s <Plug>(easymotion-s2)
+let g:EasyMotion_do_mapping = 1 " Disable default mappings"
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_do_shade = 0
 
@@ -182,7 +337,10 @@ map  <Leader>w <Plug>(easymotion-bd-w)
 " FZF
 nnoremap <silent> <leader><space> :Files<CR>
 nnoremap <silent> <C-p> :Files<CR>
+nnoremap <silent> <C-b> :Buffers<CR>
 nnoremap <silent> <leader>oc :Files ~/src/oc/<CR>
+nnoremap <silent> <leader>b :Lines<CR>
+let g:fzf_layout = { 'down': '30%'}
 
 
 let g:fzf_colors =
@@ -209,29 +367,9 @@ nmap <leader>gs :Gstatus<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gr :Gread<CR>
 
-" jedi
-let g:jedi#completions_command = "<C-Space>"
-let g:jedi#completions_enabled = 0
-let g:jedi#goto_command = "<leader>tg"
-let g:jedi#goto_assignments_command = "<leader>ta"
-let g:jedi#goto_definitions_command = "<leader>td"
-let g:jedi#usages_command = "<leader>tu"
-let g:jedi#rename_command = "<leader>tr"
-" let g:jedi#popup_on_dot = 1
-let g:jedi#show_call_signatures = "2"
-let g:jedi#use_splits_not_buffers = "right"
-let g:jedi#force_py_version = 3
-
-" deoplete
-let g:deoplete#enable_at_startup = 1
-let g:python3_host_prog = '/usr/local/bin/python3'
-
 " TComment
 nmap <Leader>c :TComment<CR>
 vmap <Leader>c :TComment<CR>
-
-" Yankstack
-call yankstack#setup()
 
 " chdir rooter
 let g:rooter_silent_chdir = 1
@@ -239,9 +377,9 @@ let g:rooter_silent_chdir = 1
 " Peekabo
 let g:peekaboo_window = 'vertical botright 50new'
 
-" Dash
-nmap <leader>d <Plug>DashSearch
-nmap <leader>D <Plug>DashGlobalSearch
+" Motions
+map <buffer> ]] <Plug>(PythonsenseStartOfNextPythonFunction)
+map <buffer> [[ <Plug>(PythonsenseStartOfPythonFunction)
 
 " Stuff from vimways
 function! s:inIndentation()
